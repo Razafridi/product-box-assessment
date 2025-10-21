@@ -5,11 +5,11 @@ namespace Backend.Interface
 {
 	public interface ICustomerRepository
 	{
-		public Task AddCustomer(Customer customer);
-		public Task UpdateCustomer(Customer customer);
+		public Task AddCustomer(CustomerCreateDTO customer);
+		public Task UpdateCustomer(CustomerUpdateDTO customer);
 		public Task DeleteCustomer(int customerIds);
 		public Task<ICollection<CustomerDTO>> GetAllCustomers();
-		//public Task<Customer> GetCustomerById(int id);
+		public Task<CustomerDTO?> GetCustomerById(int id);
 
 	}
 }

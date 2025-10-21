@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react'
-import { getAllCustomerApi } from './service/api';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import CustomerPage from './pages/CustomerPage';
+import CustomerViewPage from './pages/CustomerViewPage';
 
 function App() {
-  const getAllCustomers = async () =>{
-    const res = await getAllCustomerApi();
-    console.log("Res", res);
-  }
-  useEffect(()=>{
-    getAllCustomers()
-  }, [])
-  return (
-    <div className='text-red-500'>
-
-    </div>
-  )
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <CustomerPage />,
+    },
+    {
+      path: '/view-customer',
+      element: <CustomerViewPage />,
+    },
+  ]);
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;

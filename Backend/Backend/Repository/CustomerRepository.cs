@@ -15,15 +15,48 @@ namespace Backend.Repository
 			_context = context;
         }
 
-        public async Task AddCustomer(Customer customer)
+        public async Task AddCustomer(CustomerCreateDTO customer)
 		{
-			await _context.AddAsync(customer);
-			await _context.SaveChangesAsync();
+			var custType = await _context.CustomerTypes.FirstOrDefaultAsync(x => x.Id == customer.TypeId);
+			if (custType != null)
+			{
+				var cust = new Customer
+				{
+					Address = customer.Address,
+					City = customer.City,
+					Description = customer.Description,
+					Name = customer.Name,
+					State = customer.State,
+					Zips = customer.Zips,
+					LastUpdated = DateTime.Now,
+					CustomerType = custType
+
+				};
+				await _context.AddAsync(cust);
+				await _context.SaveChangesAsync();
+			}
 		}
-		public async Task UpdateCustomer(Customer customer)
+		public async Task UpdateCustomer(CustomerUpdateDTO customer)
 		{
-			_context.Update(customer);
-			await _context.SaveChangesAsync();
+			var custType = await _context.CustomerTypes.FirstOrDefaultAsync(x => x.Id == customer.TypeId);
+			if (custType != null)
+			{
+				var cust = new Customer
+				{
+					Id = customer.id,
+					Address = customer.Address,
+					City = customer.City,
+					Description = customer.Description,
+					Name = customer.Name,
+					State = customer.State,
+					Zips = customer.Zips,
+					LastUpdated = DateTime.Now,
+					CustomerType = custType
+
+				};
+				_context.Update(cust);
+				await _context.SaveChangesAsync();
+			}
 		}
 		public async Task DeleteCustomer(int customerId)
 		{
@@ -54,10 +87,32 @@ namespace Backend.Repository
 
 			return customers;
 		}
-		//public async Task<Customer> GetCustomerById(int id)
-		//{
-		//	return new Customer { };
-		//}
+		public async Task<CustomerDTO?> GetCustomerById(int id)
+		{
+			var customer = _context.Customers.Include(c => c.CustomerType).FirstOrDefault(x => x.Id == id);
+			if(customer == null)
+			{
+				return null;
+			}
+
+			var custDto = new CustomerDTO
+			{
+				Address = customer.Address,
+				City = customer.City,
+				Id = customer.Id,
+				Description = customer.Description,
+				Name = customer.Name,
+				LastUpdated = customer.LastUpdated,
+				State = customer.State,
+				Zips = customer.Zips,
+				CustomerType = customer.CustomerType != null ? new CustomerTypeDTO { Id=customer.CustomerType.Id, Name=customer.CustomerType.Name} :null,
+
+			};
+
+			return custDto;
+
+
+		}
 
 
 	}

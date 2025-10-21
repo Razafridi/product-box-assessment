@@ -1,4 +1,5 @@
-﻿using Backend.Interface;
+﻿using Backend.DTO;
+using Backend.Interface;
 using Backend.Model;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace Backend.Controllers
         }
 
         [HttpPost]
-        public async  Task<IActionResult> AddCustomer(Customer customer)
+        public async  Task<IActionResult> AddCustomer([FromBody] CustomerCreateDTO customer)
         {
             await customerRepository.AddCustomer(customer);
             return Ok(new { Success = true, Message = "Customer Added Successfully" });
@@ -27,15 +28,26 @@ namespace Backend.Controllers
             return Ok(new {Success= true, Data=res});
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetCustomerById([FromQuery] int customerId)
+        {
+            var res = await customerRepository.GetCustomerById(customerId);
+            if(res == null)
+            {
+                return Ok(new { Success = false, Message = "Customer not found" });
+            }
+            return Ok(new { Success= true, Data=res});
+        }
+
         [HttpPut]
-        public async Task<IActionResult> UpdateCustomer(Customer customer)
+        public async Task<IActionResult> UpdateCustomer([FromBody]CustomerUpdateDTO customer)
         {
             await customerRepository.UpdateCustomer(customer);
             return Ok(new { Success = true, Message = "Customer Updated Successfully" });
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteCustomer([FromBody] int customerId)
+        public async Task<IActionResult> DeleteCustomer([FromQuery] int customerId)
         {
             await customerRepository.DeleteCustomer(customerId);
             return Ok(new {Success=true, Message="Deleted Successfully"});

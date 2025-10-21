@@ -19,3 +19,25 @@ export interface ResultReponse<T> {
     success: boolean,
     message?: string,
 }
+
+export interface CustomerCreateDto {
+  name: string;
+  description?: string | null;
+  address: string;
+  city: string;
+  state: string;
+  zips: string;
+  customerTypeId: number,
+}
+  
+export interface CustomerUpdateDto {
+  id: number;
+  name: string;
+  description?: string | null;
+  address: string;
+  city: string;
+  state: string;
+  zips: string;
+  typeId: number,
+}
+  
